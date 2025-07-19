@@ -6,6 +6,7 @@
 #include "objects/scenes/RotatingScene.hpp"
 #include "objects/scenes/MaterialScene.hpp"
 #include "objects/scenes/BezierScene.hpp"
+#include "objects/scenes/EmptyScene.hpp"
 
 #include <iostream>
 #include <GL/glew.h>
@@ -39,10 +40,11 @@ bool App::init() {
     camera->updateAspectRatio(800.0f, 600.0f);
     
     // Set up da callbacks
-    Callbacks::init(camera.get(), 800.0f, 600.0f);
+    Callbacks::init(camera.get(), this, 800.0f, 600.0f);
     glfwSetFramebufferSizeCallback(window, Callbacks::framebuffer_size_callback);
     glfwSetCursorPosCallback(window, Callbacks::mouse_callback);
     glfwSetScrollCallback(window, Callbacks::scroll_callback);
+    glfwSetMouseButtonCallback(window, Callbacks::mouse_button_callback);
     
     // Tell GLFW to capture mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -65,9 +67,11 @@ bool App::init() {
     scenes.emplace_back(std::make_unique<RotatingScene>());
     scenes.emplace_back(std::make_unique<MaterialScene>());
     scenes.emplace_back(std::make_unique<BezierScene>());
+    scenes.emplace_back(std::make_unique<EmptyScene>());
 
     for (auto& scene : scenes) { // Camera everywhere now
         scene->setCamera(camera.get());
+        scene->setWindow(window);
     }
 
     scenes[currentSceneIndex]->init();

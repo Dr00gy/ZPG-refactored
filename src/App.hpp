@@ -43,4 +43,10 @@ public:
     void cleanup();
     void switchScene();
     Camera* getCamera() const { return camera.get(); }
+    Scene* getCurrentScene() const {
+        if (currentSceneIndex < scenes.size()) {
+            return scenes[currentSceneIndex].get();
+        }
+        return nullptr;
+    }
 };

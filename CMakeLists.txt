@@ -27,5 +27,6 @@ add_executable(kms
     src/objects/scenes/RotatingScene.cpp
     src/objects/scenes/MaterialScene.cpp
     src/objects/scenes/BezierScene.cpp
+    src/objects/scenes/EmptyScene.cpp
     )
 target_link_libraries(kms glfw GL X11 GLEW::GLEW assimp SOIL ${SDL2_LIBRARIES})
