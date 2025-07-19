@@ -1,2 +1,7 @@
-# ZPG-refactored
-Actually a 2nd attempt for a better ZPG project (OpenGL engine) as my first one had really bad optimalisation and some aspects were bug prone.
+# Run the project
+`cmake .`
+`make`
+And run the generated file.
+
+# Important
+Uses the single file stb_image lib and also an old version of SOIL that I had sitting in my PC for a while now, which is now only downloadable from archives.
