@@ -2,6 +2,7 @@
 #include "helpers/Callbacks.hpp"
 #include "objects/scenes/TriangleScene.hpp"
 #include "objects/scenes/RectangleScene.hpp"
+#include "objects/scenes/TexturedScene.hpp"
 
 #include <iostream>
 #include <GL/glew.h>
@@ -39,6 +40,7 @@ bool App::init() {
 
     scenes.emplace_back(std::make_unique<TriangleScene>());
     scenes.emplace_back(std::make_unique<RectangleScene>());
+    scenes.emplace_back(std::make_unique<TexturedScene>());
     scenes[currentSceneIndex]->init();
 
     return true;
