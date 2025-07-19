@@ -6,7 +6,7 @@
 class Shader {
 public:
     GLuint ID;
-
+    Shader(const char* vertexPath, const char* fragmentPath, bool fromFiles);
     Shader(const char* vertexSrc, const char* fragmentSrc);
     void use();
     void deleteProgram();

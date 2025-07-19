@@ -1,25 +1,12 @@
 #include "TriangleScene.hpp"
-
-const char* vertexShaderSrc1 = R"(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColor;
-out vec3 ourColor;
-void main() {
-    gl_Position = vec4(aPos, 1.0);
-    ourColor = aColor;
-})";
-
-const char* fragmentShaderSrc1 = R"(
-#version 330 core
-in vec3 ourColor;
-out vec4 FragColor;
-void main() {
-    FragColor = vec4(ourColor, 1.0);
-})";
+#include <memory>
 
 void TriangleScene::init() {
-    shader = std::make_unique<Shader>(vertexShaderSrc1, fragmentShaderSrc1);
+    shader = std::make_unique<Shader>(
+        "shaders/vert.vert",
+        "shaders/frag.frag",
+        true
+    );
     
     // Per-vertex colors
     auto mesh = std::make_shared<Mesh>(MeshType::NORMAL); // NORMAL type to access color attribute
@@ -46,5 +33,6 @@ void TriangleScene::cleanup() {
     }
     if (shader) {
         shader->deleteProgram();
+        shader.reset();
     }
 }

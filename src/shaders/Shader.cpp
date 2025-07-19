@@ -1,4 +1,5 @@
 #include "Shader.hpp"
+#include "../helpers/ShaderLoader.h"
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -32,6 +33,11 @@ Shader::Shader(const char* vertexSrc, const char* fragmentSrc) {
 
     glDeleteShader(vertex);
     glDeleteShader(fragment);
+}
+
+Shader::Shader(const char* vertexPath, const char* fragmentPath, bool fromFiles) {
+    ShaderLoader loader;
+    ID = loader.loadShader(vertexPath, fragmentPath);
 }
 
 void Shader::use() {

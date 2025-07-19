@@ -15,6 +15,7 @@ add_executable(kms
     src/App.cpp
     src/Controls.cpp
     src/helpers/Callbacks.cpp
+    src/helpers/ShaderLoader.cpp
     src/objects/Mesh.cpp
     src/objects/Model.cpp
     src/shaders/Shader.cpp
@@ -22,5 +23,6 @@ add_executable(kms
     src/objects/scenes/TriangleScene.cpp
     src/objects/scenes/RectangleScene.cpp
     src/objects/scenes/TexturedScene.cpp
+    src/objects/scenes/RotatingScene.cpp
     )
 target_link_libraries(kms glfw GL X11 GLEW::GLEW assimp SOIL ${SDL2_LIBRARIES})
