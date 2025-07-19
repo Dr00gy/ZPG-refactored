@@ -5,6 +5,7 @@
 #include "objects/scenes/TexturedScene.hpp"
 #include "objects/scenes/RotatingScene.hpp"
 #include "objects/scenes/MaterialScene.hpp"
+#include "objects/scenes/BezierScene.hpp"
 
 #include <iostream>
 #include <GL/glew.h>
@@ -63,6 +64,7 @@ bool App::init() {
     scenes.emplace_back(std::make_unique<TexturedScene>());
     scenes.emplace_back(std::make_unique<RotatingScene>());
     scenes.emplace_back(std::make_unique<MaterialScene>());
+    scenes.emplace_back(std::make_unique<BezierScene>());
 
     for (auto& scene : scenes) { // Camera everywhere now
         scene->setCamera(camera.get());
