@@ -4,6 +4,7 @@
 #include "objects/scenes/RectangleScene.hpp"
 #include "objects/scenes/TexturedScene.hpp"
 #include "objects/scenes/RotatingScene.hpp"
+#include "objects/scenes/MaterialScene.hpp"
 
 #include <iostream>
 #include <GL/glew.h>
@@ -43,6 +44,7 @@ bool App::init() {
     scenes.emplace_back(std::make_unique<RectangleScene>());
     scenes.emplace_back(std::make_unique<TexturedScene>());
     scenes.emplace_back(std::make_unique<RotatingScene>());
+    scenes.emplace_back(std::make_unique<MaterialScene>());
     scenes[currentSceneIndex]->init();
 
     return true;

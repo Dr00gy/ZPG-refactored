@@ -1,17 +1,16 @@
 #pragma once
-#define MATERIAL_H
-
 #include "Texture.hpp"
 #include <optional>
+#include <memory>
 
 class Material {
-private:
-
 public:
     Material() = default;
-    ~Material() = default;
+    virtual ~Material() = default;
 
     float specular = 0.75f;
-    float color[4] = { 1, 1, 1, 1 }; //white
-    std::optional<Texture> texture = std::nullopt; // has_value() check
+    float color[4] = {1.0f, 1.0f, 1.0f, 1.0f}; // RGBA
+    
+    virtual void bind(Shader& shader) const = 0;
+    virtual void cleanup() {}
 };
