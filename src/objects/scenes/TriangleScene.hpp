@@ -1,12 +1,12 @@
 #pragma once
 #include "../Scene.hpp"
 #include "../../shaders/Shader.hpp"
-#include "../Mesh.hpp"
+#include "../../objects/Model.hpp"
 #include <memory>
 
 class TriangleScene : public Scene {
 private:
-    std::unique_ptr<Mesh> mesh;
+    std::shared_ptr<Model> model;
     std::unique_ptr<Shader> shader;
 
 public:

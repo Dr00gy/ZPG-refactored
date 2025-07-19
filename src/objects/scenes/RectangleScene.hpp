@@ -1,12 +1,12 @@
 #pragma once
 #include "../Scene.hpp"
 #include "../../shaders/Shader.hpp"
-#include <GL/glew.h>
+#include "../../objects/Model.hpp"
 #include <memory>
 
-class RectangleScene : public Scene { // Decided to make seperated header and cpp files for each scene for potential modifs
+class RectangleScene : public Scene { // Still seperated scene subclasses for modifications
 private:
-    GLuint VAO, VBO, EBO;
+    std::shared_ptr<Model> model;
     std::unique_ptr<Shader> shader;
 
 public:

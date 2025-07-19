@@ -16,6 +16,7 @@ add_executable(kms
     src/Controls.cpp
     src/helpers/Callbacks.cpp
     src/objects/Mesh.cpp
+    src/objects/Model.cpp
     src/shaders/Shader.cpp
     src/shaders/Texture.cpp
     src/objects/scenes/TriangleScene.cpp
