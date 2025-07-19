@@ -1,4 +1,5 @@
 #include "RotatingScene.hpp"
+#include "../Camera.hpp"
 #include <iostream>
 
 RotatingScene::RotatingScene() 
@@ -10,7 +11,7 @@ RotatingScene::~RotatingScene() {
 
 void RotatingScene::init() {
     shader = std::make_unique<Shader>(
-        "shaders/transVert.glsl",
+        "shaders/cameraVert.glsl",
         "shaders/transFrag.glsl",
         true
     );
@@ -32,9 +33,14 @@ void RotatingScene::update(float deltaTime) {
 }
 
 void RotatingScene::render() {
+    if (!camera) return;
     shader->use();
     glm::mat4 modelMatrix = model->getModelMatrix();
+    glm::mat4 viewMatrix = camera->getViewMatrix();
+    glm::mat4 projectionMatrix = camera->getProjectionMatrix();
     shader->setMat4("model", modelMatrix);
+    shader->setMat4("view", viewMatrix);
+    shader->setMat4("projection", projectionMatrix);
     texture->bind();
     model->draw();
 }

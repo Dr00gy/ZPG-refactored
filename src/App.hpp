@@ -18,6 +18,7 @@
 
 #include "shaders/Shader.hpp"
 #include "objects/Mesh.hpp"
+#include "objects/Camera.hpp"
 #include "Controls.hpp"
 #include "objects/Scene.hpp"
 
@@ -26,6 +27,7 @@ private:
     GLFWwindow* window;
     std::unique_ptr<Shader> shader;
     std::unique_ptr<Mesh> mesh;
+    std::unique_ptr<Camera> camera;
     std::vector<std::unique_ptr<Scene>> scenes;
     int currentSceneIndex = 0;
     float lastFrameTime = 0.0f;
@@ -40,4 +42,5 @@ public:
     void run();
     void cleanup();
     void switchScene();
+    Camera* getCamera() const { return camera.get(); }
 };

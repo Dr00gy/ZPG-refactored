@@ -38,6 +38,11 @@ Shader::Shader(const char* vertexSrc, const char* fragmentSrc) {
 Shader::Shader(const char* vertexPath, const char* fragmentPath, bool fromFiles) {
     ShaderLoader loader;
     ID = loader.loadShader(vertexPath, fragmentPath);
+    if (ID == 0) {
+        std::cerr << "ERROR: Failed to compile/link skybox shaders!\n";
+        std::cerr << "Vertex: " << vertexPath << "\n";
+        std::cerr << "Fragment: " << fragmentPath << "\n";
+    }
 }
 
 void Shader::use() {

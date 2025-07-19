@@ -5,6 +5,7 @@
 #include "objects/scenes/TexturedScene.hpp"
 #include "objects/scenes/RotatingScene.hpp"
 #include "objects/scenes/MaterialScene.hpp"
+#include "objects/scenes/SkyboxScene.hpp"
 
 #include <iostream>
 #include <GL/glew.h>
@@ -32,7 +33,22 @@ bool App::init() {
     }
 
     glfwMakeContextCurrent(window);
+
+    // Init camera
+    camera = std::make_unique<Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
+    camera->updateAspectRatio(800.0f, 600.0f);
+    
+    // Set up da callbacks
+    Callbacks::init(camera.get(), 800.0f, 600.0f);
     glfwSetFramebufferSizeCallback(window, Callbacks::framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, Callbacks::mouse_callback);
+    glfwSetScrollCallback(window, Callbacks::scroll_callback);
+    
+    // Tell GLFW to capture mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    
+    // Set camera 4 controls
+    Controls::setCamera(camera.get());
 
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
@@ -40,11 +56,20 @@ bool App::init() {
         return false;
     }
 
+    // Enable depth testing for skybox
+    glEnable(GL_DEPTH_TEST);
+
     scenes.emplace_back(std::make_unique<TriangleScene>());
     scenes.emplace_back(std::make_unique<RectangleScene>());
     scenes.emplace_back(std::make_unique<TexturedScene>());
     scenes.emplace_back(std::make_unique<RotatingScene>());
     scenes.emplace_back(std::make_unique<MaterialScene>());
+    scenes.emplace_back(std::make_unique<SkyboxScene>());
+
+    for (auto& scene : scenes) { // Camera everywhere now
+        scene->setCamera(camera.get());
+    }
+
     scenes[currentSceneIndex]->init();
 
     return true;
@@ -56,7 +81,7 @@ void App::run() {
         float deltaTime = currentFrameTime - lastFrameTime;
         lastFrameTime = currentFrameTime;
 
-        Controls::processInput(window);
+        Controls::processInput(window, deltaTime);
 
         int tabState = glfwGetKey(window, GLFW_KEY_TAB); // "Debounced"
         if (tabState == GLFW_PRESS && lastTabState == GLFW_RELEASE) {
@@ -65,7 +90,7 @@ void App::run() {
         lastTabState = tabState;
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         scenes[currentSceneIndex]->update(deltaTime);
         scenes[currentSceneIndex]->render();
@@ -87,5 +112,6 @@ void App::cleanup() {
 void App::switchScene() {
     scenes[currentSceneIndex]->cleanup();
     currentSceneIndex = (currentSceneIndex + 1) % scenes.size();
+    scenes[currentSceneIndex]->setCamera(camera.get()); // New scene gets a camera ref
     scenes[currentSceneIndex]->init();
 }
