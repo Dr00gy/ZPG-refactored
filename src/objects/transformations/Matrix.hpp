@@ -1,16 +1,16 @@
 #pragma once
 #include "Transformation.hpp"
 
-class Matrix : public Transformation { // Inheritance
+class Matrix : public Transformation {
 private:
     glm::mat4 matrix;
 
 public:
     Matrix() { matrix = glm::mat4(1.0f); }
     Matrix(glm::mat4 mat) { matrix = mat; }
-    ~Matrix();
+    ~Matrix() = default;
 
-    glm::mat4 getTransformationMatrix() {
+    glm::mat4 getTransformationMatrix() const override {
         return this->matrix;
     }
 };

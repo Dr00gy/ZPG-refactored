@@ -11,6 +11,7 @@ private:
 
 public:
     void init() override;
+    virtual void update(float deltaTime) {}
     void render() override;
     void cleanup() override;
 };

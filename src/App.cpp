@@ -3,6 +3,7 @@
 #include "objects/scenes/TriangleScene.hpp"
 #include "objects/scenes/RectangleScene.hpp"
 #include "objects/scenes/TexturedScene.hpp"
+#include "objects/scenes/RotatingScene.hpp"
 
 #include <iostream>
 #include <GL/glew.h>
@@ -41,6 +42,7 @@ bool App::init() {
     scenes.emplace_back(std::make_unique<TriangleScene>());
     scenes.emplace_back(std::make_unique<RectangleScene>());
     scenes.emplace_back(std::make_unique<TexturedScene>());
+    scenes.emplace_back(std::make_unique<RotatingScene>());
     scenes[currentSceneIndex]->init();
 
     return true;
@@ -48,6 +50,10 @@ bool App::init() {
 
 void App::run() {
     while (!glfwWindowShouldClose(window)) {
+        float currentFrameTime = glfwGetTime();
+        float deltaTime = currentFrameTime - lastFrameTime;
+        lastFrameTime = currentFrameTime;
+
         Controls::processInput(window);
 
         int tabState = glfwGetKey(window, GLFW_KEY_TAB); // "Debounced"
@@ -59,6 +65,7 @@ void App::run() {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        scenes[currentSceneIndex]->update(deltaTime);
         scenes[currentSceneIndex]->render();
 
         glfwSwapBuffers(window);

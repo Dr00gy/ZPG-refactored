@@ -1,65 +1,100 @@
+#define GLM_ENABLE_EXPERIMENTAL
 #include "Model.hpp"
 #include <iostream>
 
 Model::Model() : position(0.0f), rotation(0.0f), scale(1.0f) {
+    updateTransformationComposite();
 }
 
 Model::Model(std::shared_ptr<Mesh> mesh) : position(0.0f), rotation(0.0f), scale(1.0f) {
     addMesh(mesh);
+    updateTransformationComposite();
 }
 
 Model::Model(const std::string& filepath, MeshType type) : position(0.0f), rotation(0.0f), scale(1.0f) {
     loadModel(filepath, type);
+    updateTransformationComposite();
 }
 
 void Model::setPosition(float x, float y, float z) {
     position = glm::vec3(x, y, z);
+    updateTransformationComposite();
 }
 
 void Model::setPosition(const glm::vec3& pos) {
     position = pos;
+    updateTransformationComposite();
 }
 
 void Model::translate(float x, float y, float z) {
     position += glm::vec3(x, y, z);
+    updateTransformationComposite();
 }
 
 void Model::translate(const glm::vec3& translation) {
     position += translation;
+    updateTransformationComposite();
 }
 
 void Model::setRotation(float x, float y, float z) {
     rotation = glm::vec3(x, y, z);
+    updateTransformationComposite();
 }
 
 void Model::setRotation(const glm::vec3& rot) {
     rotation = rot;
+    updateTransformationComposite();
 }
 
 void Model::rotate(float x, float y, float z) {
     rotation += glm::vec3(x, y, z);
+    updateTransformationComposite();
 }
 
 void Model::rotate(const glm::vec3& rot) {
     rotation += rot;
+    updateTransformationComposite();
 }
 
 void Model::setScale(float x, float y, float z) {
     scale = glm::vec3(x, y, z);
+    updateTransformationComposite();
 }
 
 void Model::setScale(const glm::vec3& scl) {
     scale = scl;
+    updateTransformationComposite();
 }
 
 void Model::setScale(float uniformScale) {
     scale = glm::vec3(uniformScale);
+    updateTransformationComposite();
+}
+
+void Model::addTransformation(std::unique_ptr<Transformation> transformation) {
+    transformations.addTransformationBack(std::move(transformation));
+}
+
+void Model::addTransformationFront(std::unique_ptr<Transformation> transformation) {
+    transformations.addTransformationFront(std::move(transformation));
+}
+
+void Model::clearTransformations() {
+    transformations.clear();
+    updateTransformationComposite();
+}
+
+void Model::simplifyTransformations() {
+    transformations.simplify();
 }
 
 glm::mat4 Model::getModelMatrix() const {
+    return getCompositeModelMatrix();
+}
+
+glm::mat4 Model::getBasicModelMatrix() const {
     glm::mat4 model = glm::mat4(1.0f);
     
-    // Temp
     model = glm::translate(model, position);
     model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -67,6 +102,29 @@ glm::mat4 Model::getModelMatrix() const {
     model = glm::scale(model, scale);
     
     return model;
+}
+
+glm::mat4 Model::getCompositeModelMatrix() const {
+    return transformations.getTransformationMatrix();
+}
+
+void Model::updateTransformationComposite() {
+    // Clear existing basic transforms to rebuild them
+    transformations.clear();
+    
+    // In order: Scale -> Rotate -> Translate
+    
+    if (scale != glm::vec3(1.0f)) {
+        transformations.addTransformationBack(std::make_unique<Scale>(scale.x, scale.y, scale.z));
+    }
+    
+    if (rotation != glm::vec3(0.0f)) {
+        transformations.addTransformationBack(std::make_unique<Rotation>(rotation.x, rotation.y, rotation.z));
+    }
+    
+    if (position != glm::vec3(0.0f)) {
+        transformations.addTransformationBack(std::make_unique<Translation>(position.x, position.y, position.z));
+    }
 }
 
 void Model::addMesh(std::shared_ptr<Mesh> mesh) {
@@ -121,6 +179,7 @@ void Model::cleanup() {
         }
     }
     meshes.clear();
+    transformations.clear();
 }
 
 Model::~Model() {
@@ -136,7 +195,7 @@ void Model::loadModel(const std::string& filepath, MeshType type) {
     #endif
 }
 
-// Factories are here
+// Factory methods
 std::shared_ptr<Model> Model::createTriangle(MeshType type) {
     auto mesh = std::make_shared<Mesh>(Mesh::createTriangle(type));
     return std::make_shared<Model>(mesh);

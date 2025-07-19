@@ -2,18 +2,20 @@
 #include <iostream>
 
 const char* vertexShaderSource = R"(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aNormal;
-layout (location = 2) in vec2 aTexCoord;
-
-out vec2 texCoord;
-
-void main()
-{
-    gl_Position = vec4(aPos, 1.0);
-    texCoord = aTexCoord;
-}
+    #version 330 core
+    layout (location = 0) in vec3 aPos;
+    layout (location = 1) in vec3 aNormal;
+    layout (location = 2) in vec2 aTexCoord;
+    
+    out vec2 texCoord;
+    
+    uniform mat4 model;
+    
+    void main()
+    {
+        gl_Position = model * vec4(aPos, 1.0);  // For model transformation
+        texCoord = aTexCoord;
+    }
 )";
 
 const char* fragmentShaderSource = R"(
@@ -42,10 +44,16 @@ void TexturedScene::init() {
     // Square model with UV coordinates
     model = Model::createSquare(MeshType::UV);
     model->setupAllMeshes();
+
+    model->setPosition(0.5f, 0.2f, 0.0f);        // Move right and up
+    model->setRotation(0.0f, 0.0f, 0.785f);      // Rotate 45 degrees (π/4 radians) around Z
+    model->setScale(1.5f, 1.0f, 1.0f);           // Scale wider on X axis
 }
 
 void TexturedScene::render() {
     shader->use();
+    glm::mat4 modelMatrix = model->getModelMatrix();
+    shader->setMat4("model", modelMatrix);
     texture->bind();
     model->draw();
 }

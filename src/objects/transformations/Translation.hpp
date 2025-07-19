@@ -14,9 +14,7 @@ public:
 
     ~Translation() = default;
 
-    glm::mat4 getTransformationMatrix() {
+    glm::mat4 getTransformationMatrix() const override {
         return glm::translate(glm::mat4(1.0f), this->translation);
     }
 };
-
-#endif // TRANSLATION_H

@@ -7,5 +7,5 @@ private:
 public:
     Transformation() = default;
     ~Transformation() = default;
-    virtual glm::mat4 getTransformationMatrix() = 0;
+    virtual glm::mat4 getTransformationMatrix() const = 0;
 };

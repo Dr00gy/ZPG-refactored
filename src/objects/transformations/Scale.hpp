@@ -3,7 +3,7 @@
 #include <glm/vec3.hpp>
 #include "Transformation.hpp"
 
-class Scale : public Transformation { // Inheritance
+class Scale : public Transformation {
 private:
     glm::vec3 scale;
 
@@ -14,7 +14,7 @@ public:
     
     ~Scale() = default;
 
-    glm::mat4 getTransformationMatrix() {
+    glm::mat4 getTransformationMatrix() const override {
         return glm::scale(glm::mat4(1.0f), this->scale);
     }
 };

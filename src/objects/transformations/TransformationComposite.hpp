@@ -4,24 +4,20 @@
 #include "Matrix.hpp"
 #include "Transformation.hpp"
 
-class TransformationComposite : public Transformation { // Inheritance, polymorphism
+class TransformationComposite : public Transformation {
 private:
-    std::vector<Transformation*> transformations;
+    std::vector<std::unique_ptr<Transformation>> transformations;
 
 public:
     TransformationComposite() = default;
 
-    TransformationComposite(std::vector<Transformation*> transformations) {
-        transformations = transformations;
+    TransformationComposite(std::vector<std::unique_ptr<Transformation>> transformations) {
+        this->transformations = std::move(transformations);
     }
 
-    ~TransformationComposite() {
-        for (auto transformation : transformations) {
-            delete transformation;
-        }
-    }
+    ~TransformationComposite() = default;
 
-    glm::mat4 getTransformationMatrix() {
+    glm::mat4 getTransformationMatrix() const override {
         glm::mat4 output = glm::mat4(1.0f);
         for (auto& transformation : transformations) {
             output = transformation->getTransformationMatrix() * output;
@@ -29,24 +25,29 @@ public:
         return output;
     }
 
-    void addTransformationBack(Transformation* transformation) {
+    void addTransformationBack(std::unique_ptr<Transformation> transformation) {
         transformations.push_back(std::move(transformation));
     }
 
-    void addTransformationFront(Transformation* transformation) {
+    void addTransformationFront(std::unique_ptr<Transformation> transformation) {
         transformations.insert(transformations.begin(), std::move(transformation));
     }
 
     void simplify() {
         auto mat = this->getTransformationMatrix();
         this->clear();
-        transformations.push_back(new Matrix(mat));
+        transformations.push_back(std::make_unique<Matrix>(mat));
     }
 
-    void clear(){
-        for (auto transformation : transformations) {
-            delete transformation;
-        }
+    void clear() {
         transformations.clear();
+    }
+
+    size_t getTransformationCount() const {
+        return transformations.size();
+    }
+
+    bool isEmpty() const {
+        return transformations.empty();
     }
 };

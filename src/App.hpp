@@ -28,6 +28,7 @@ private:
     std::unique_ptr<Mesh> mesh;
     std::vector<std::unique_ptr<Scene>> scenes;
     int currentSceneIndex = 0;
+    float lastFrameTime = 0.0f;
 
 public:
     App();

@@ -3,7 +3,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include "Transformation.hpp"
 
-class Rotation : public Transformation { // Inheritance
+class Rotation : public Transformation {
 private:
     glm::vec3 rotation;
 
@@ -22,7 +22,7 @@ public:
         this->rotation += glm::vec3(x, y, z);
     }
 
-    glm::mat4 getTransformationMatrix() {
+    glm::mat4 getTransformationMatrix() const override {
         auto normal_x = glm::vec3(1.0, 0.0, 0.0);
         auto normal_y = glm::vec3(0.0, 1.0, 0.0);
         auto normal_z = glm::vec3(0.0, 0.0, 1.0);
