@@ -1,13 +1,11 @@
-#version 450
+#version 330 core
+out vec4 FragColor;
 
-in vec3 frag_pos;
+in vec3 TexCoords;
 
 uniform samplerCube texture_unit_id;
 
-out vec4 frag_colour;
-
 void main()
-{
-    //frag_colour = texture(texture_unit_id, frag_pos);
-    frag_colour = vec4(0.0f, 0.5f, 1.0f, 1.0f);
+{    
+    FragColor = texture(texture_unit_id, TexCoords);
 }

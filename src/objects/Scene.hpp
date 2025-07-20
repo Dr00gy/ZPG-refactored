@@ -16,6 +16,7 @@ public:
     virtual void setCamera(Camera* camera) { this->camera = camera; }
     virtual void handleMouseClick(int button, int action) {}
     void setWindow(GLFWwindow* win) { window = win; }
+    virtual void handleKeyPress(int key) {}
 protected:
     GLFWwindow* window = nullptr;
     Camera* camera = nullptr;

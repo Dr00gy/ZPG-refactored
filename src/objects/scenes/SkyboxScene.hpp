@@ -16,9 +16,12 @@ public:
     void render() override;
     void cleanup() override;
 
+    void handleKeyPress(int key) override; 
+
 private:
     std::shared_ptr<Model> skyboxModel;
     std::unique_ptr<Shader> skyboxShader;
     std::unique_ptr<SkyboxTexture> skyboxTexture;
     std::vector<std::string> skyboxFaces;
+    bool isInsideSkybox = true; 
 };

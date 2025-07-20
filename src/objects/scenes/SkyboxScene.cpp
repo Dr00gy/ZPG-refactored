@@ -29,6 +29,14 @@ void SkyboxScene::init() {
     skyboxModel = Cube::create(MeshType::BASIC);
     skyboxModel->setScale(50.0f); // Make it large enough to contain the scene
     skyboxModel->setupAllMeshes();
+
+    isInsideSkybox = true;
+}
+
+void SkyboxScene::handleKeyPress(int key) {
+    if (key == GLFW_KEY_Q) {
+        isInsideSkybox = !isInsideSkybox;
+    }
 }
 
 void SkyboxScene::update(float deltaTime) {
@@ -38,21 +46,34 @@ void SkyboxScene::update(float deltaTime) {
 void SkyboxScene::render() {
     if (!camera) return;
     
-    // Draw skybox first (with depth test disabled)
-    glDepthMask(GL_FALSE);
+    // Draw skybox behind everything else
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+
     skyboxShader->use();
+    skyboxShader->setBool("isInside", isInsideSkybox);
     
-    glm::mat4 view = glm::mat4(glm::mat3(camera->getViewMatrix()));
+    glm::mat4 view;
+    if (isInsideSkybox) {
+        // Static
+        view = glm::mat4(glm::mat3(camera->getViewMatrix()));
+    } else {
+        // Regular view from outside
+        view = camera->getViewMatrix();
+    }
+    
     glm::mat4 projection = camera->getProjectionMatrix();
-    
-    skyboxShader->setMat4("view_mat", view);
-    skyboxShader->setMat4("projection_mat", projection);
+    skyboxShader->setMat4("view", view);
+    skyboxShader->setMat4("projection", projection);
+
+    glDisable(GL_CULL_FACE);
     
     skyboxTexture->bind(GL_TEXTURE0);
     skyboxShader->setInt("texture_unit_id", 0);
     
     skyboxModel->draw();
-    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_CULL_FACE);
 }
 
 void SkyboxScene::cleanup() {

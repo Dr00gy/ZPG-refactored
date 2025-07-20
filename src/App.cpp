@@ -47,6 +47,7 @@ bool App::init() {
     glfwSetCursorPosCallback(window, Callbacks::mouse_callback);
     glfwSetScrollCallback(window, Callbacks::scroll_callback);
     glfwSetMouseButtonCallback(window, Callbacks::mouse_button_callback);
+    glfwSetKeyCallback(window, Callbacks::key_callback);
     
     // Tell GLFW to capture mouse
     //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

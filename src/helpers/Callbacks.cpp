@@ -52,9 +52,14 @@ void Callbacks::mouse_button_callback(GLFWwindow* window, int button, int action
     }
 }
 
-
 void Callbacks::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     if (!currentCamera) return;
     
     currentCamera->processMouseScroll(static_cast<float>(yoffset));
+}
+
+void Callbacks::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (action == GLFW_PRESS && appInstance && appInstance->getCurrentScene()) {
+        appInstance->getCurrentScene()->handleKeyPress(key);
+    }
 }
