@@ -12,7 +12,7 @@ EmptyScene::~EmptyScene() {
 void EmptyScene::init() {
     shader = std::make_unique<Shader>(
         "shaders/stencilVert.glsl",
-        "shaders/stencilFrag.glsl",
+        "shaders/basicFrag.glsl",
         true
     );
     
@@ -38,7 +38,11 @@ void EmptyScene::render() {
     shader->setMat4("projection", projection);
 
     for (size_t i = 0; i < triangles.size(); ++i) {
-        glStencilFunc(GL_ALWAYS, i + 1, 0xFF); // 1 triangle 1 unique ID (1-based)
+        glStencilFunc(GL_ALWAYS, i + 1, 0xFF); // 1 triangle == 1 unique ID (1-based)
+        
+        glm::mat4 modelMatrix = triangles[i]->getModelMatrix(); // Set model matrix so its not in the middle of the screen
+        shader->setMat4("model", modelMatrix);
+        
         triangles[i]->draw();
     }
 }
@@ -69,11 +73,20 @@ void EmptyScene::createTriangle(glm::vec2 screenPos) { // Convert screen coords 
     int width, height;
     glfwGetWindowSize(window, &width, &height);
     
-    float x = (2.0f * screenPos.x) / width - 1.0f;
-    float y = 1.0f - (2.0f * screenPos.y) / height;
+    float ndc_x = (screenPos.x / width) * 2.0f - 1.0f; // Normalising (screen to device)
+    float ndc_y = 1.0f - (screenPos.y / height) * 2.0f;
+
+    glm::vec4 clipSpacePos = glm::vec4(ndc_x, ndc_y, 0.8f, 1.0f); // Z of -1.0f is very close to camera (near plane)
+
+    glm::mat4 invMVP = glm::inverse(camera->getProjectionMatrix() * camera->getViewMatrix());
+    glm::vec4 worldSpacePos = invMVP * clipSpacePos; // World space now
+
+    if (worldSpacePos.w != 0.0f) { // From homo
+        worldSpacePos /= worldSpacePos.w;
+    }
     
     auto triangle = Model::createTriangle(MeshType::BASIC);
-    triangle->setPosition(x, y, 0.0f);
+    triangle->setPosition(worldSpacePos.x, worldSpacePos.y, worldSpacePos.z);
     triangle->setScale(0.2f);
     triangles.push_back(triangle);
 }

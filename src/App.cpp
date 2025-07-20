@@ -47,7 +47,8 @@ bool App::init() {
     glfwSetMouseButtonCallback(window, Callbacks::mouse_button_callback);
     
     // Tell GLFW to capture mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     
     // Set camera 4 controls
     Controls::setCamera(camera.get());
