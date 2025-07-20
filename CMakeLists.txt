@@ -21,6 +21,7 @@ add_executable(kms
     src/objects/Camera.cpp
     src/shaders/Shader.cpp
     src/shaders/Texture.cpp
+    src/shaders/SkyboxTexture.cpp
     src/objects/scenes/TriangleScene.cpp
     src/objects/scenes/RectangleScene.cpp
     src/objects/scenes/TexturedScene.cpp
@@ -28,5 +29,6 @@ add_executable(kms
     src/objects/scenes/MaterialScene.cpp
     src/objects/scenes/BezierScene.cpp
     src/objects/scenes/EmptyScene.cpp
+    src/objects/scenes/SkyboxScene.cpp
     )
 target_link_libraries(kms glfw GL X11 GLEW::GLEW assimp SOIL ${SDL2_LIBRARIES})
