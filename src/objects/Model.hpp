@@ -6,6 +6,8 @@
 #include "transformations/Rotation.hpp"
 #include "transformations/Scale.hpp"
 #include "transformations/Identity.hpp"
+#include "../shaders/Material.hpp"
+#include "../shaders/Shader.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory>
@@ -21,6 +23,10 @@ public:
     glm::vec3 scale;
     
     TransformationComposite transformations;
+    
+    // Material and Shader support
+    std::shared_ptr<Material> material;
+    std::shared_ptr<Shader> shader;
     
     Model();
     Model(std::shared_ptr<Mesh> mesh);
@@ -45,6 +51,11 @@ public:
     void clearTransformations();
     void simplifyTransformations();
     
+    void setMaterial(std::shared_ptr<Material> mat);
+    void setShader(std::shared_ptr<Shader> shd);
+    std::shared_ptr<Material> getMaterial() const;
+    std::shared_ptr<Shader> getShader() const;
+    
     // Matrix ops
     glm::mat4 getModelMatrix() const;
     glm::mat4 getBasicModelMatrix() const; // Uses only position, rotation, scale!
@@ -56,6 +67,8 @@ public:
     
     void draw();
     void draw(GLenum mode); // Custom draw mode (GL_TRIANGLES, GL_LINES, etc.)
+    void draw(Shader* overrideShader); // Draw with specific shader
+    void draw(GLenum mode, Shader* overrideShader); // Draw with mode and shader
     
     // Utility
     size_t getMeshCount() const;
@@ -73,4 +86,5 @@ public:
 private:
     void loadModel(const std::string& filepath, MeshType type);
     void updateTransformationComposite(); // Sync basic transforms with composite
+    void bindMaterialAndShader(Shader* currentShader); // Helper for binding
 };

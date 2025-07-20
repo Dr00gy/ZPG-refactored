@@ -3,6 +3,8 @@
 #include <optional>
 #include <memory>
 
+class Shader;
+
 class Material {
 public:
     Material() = default;

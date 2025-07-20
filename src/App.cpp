@@ -8,6 +8,7 @@
 #include "objects/scenes/BezierScene.hpp"
 #include "objects/scenes/EmptyScene.hpp"
 #include "objects/scenes/SkyboxScene.hpp"
+#include "objects/scenes/IndependantScene.hpp"
 
 #include <iostream>
 #include <GL/glew.h>
@@ -71,6 +72,7 @@ bool App::init() {
     scenes.emplace_back(std::make_unique<BezierScene>());
     scenes.emplace_back(std::make_unique<EmptyScene>());
     scenes.emplace_back(std::make_unique<SkyboxScene>());
+    scenes.emplace_back(std::make_unique<IndependantScene>());
 
     for (auto& scene : scenes) { // Camera everywhere now
         scene->setCamera(camera.get());

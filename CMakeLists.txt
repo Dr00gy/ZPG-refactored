@@ -38,5 +38,6 @@ add_executable(kms
     src/objects/scenes/BezierScene.cpp
     src/objects/scenes/EmptyScene.cpp
     src/objects/scenes/SkyboxScene.cpp
+    src/objects/scenes/IndependantScene.cpp
     )
 target_link_libraries(kms glfw GL X11 GLEW::GLEW assimp SOIL ${SDL2_LIBRARIES})

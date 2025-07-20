@@ -88,6 +88,22 @@ void Model::simplifyTransformations() {
     transformations.simplify();
 }
 
+void Model::setMaterial(std::shared_ptr<Material> mat) {
+    material = mat;
+}
+
+void Model::setShader(std::shared_ptr<Shader> shd) {
+    shader = shd;
+}
+
+std::shared_ptr<Material> Model::getMaterial() const {
+    return material;
+}
+
+std::shared_ptr<Shader> Model::getShader() const {
+    return shader;
+}
+
 glm::mat4 Model::getModelMatrix() const {
     return getCompositeModelMatrix();
 }
@@ -137,11 +153,40 @@ void Model::setupAllMeshes() {
     }
 }
 
+void Model::bindMaterialAndShader(Shader* currentShader) {
+    if (currentShader && material) {
+        material->bind(*currentShader);
+    }
+    
+    // Set model matrix if shader is available
+    if (currentShader) {
+        currentShader->setMat4("model", getModelMatrix());
+    }
+}
+
 void Model::draw() {
     draw(GL_TRIANGLES);
 }
 
 void Model::draw(GLenum mode) {
+    draw(mode, nullptr);
+}
+
+void Model::draw(Shader* overrideShader) {
+    draw(GL_TRIANGLES, overrideShader);
+}
+
+void Model::draw(GLenum mode, Shader* overrideShader) {
+    // Determine which shader to use
+    Shader* currentShader = overrideShader ? overrideShader : shader.get();
+    
+    // Use the shader if available
+    if (currentShader) {
+        currentShader->use();
+        bindMaterialAndShader(currentShader);
+    }
+    
+    // Draw all meshes
     for (auto& mesh : meshes) {
         if (!mesh) continue;
         
@@ -180,6 +225,15 @@ void Model::cleanup() {
     }
     meshes.clear();
     transformations.clear();
+    
+    // Clean up material
+    if (material) {
+        material->cleanup();
+        material.reset();
+    }
+    
+    // Not deleting the shader here cuz it could be shared, I am deleting in the scene cleanup
+    shader.reset();
 }
 
 Model::~Model() {
