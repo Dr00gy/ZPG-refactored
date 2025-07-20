@@ -57,8 +57,6 @@ public:
     static Mesh createTriangle(MeshType type = MeshType::BASIC);
     static Mesh createSquare(MeshType type = MeshType::BASIC);
     static Mesh createCircle(float radius = 1.0f, int segments = 100, MeshType type = MeshType::BASIC);
-    static Mesh createCube(MeshType type = MeshType::BASIC);
-    static Mesh createPlane(MeshType type = MeshType::UV);
     
     // OpenGL buffers
     void setupMesh();

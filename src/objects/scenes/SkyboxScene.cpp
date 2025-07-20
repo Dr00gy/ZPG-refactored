@@ -1,5 +1,6 @@
 #include "SkyboxScene.hpp"
 #include "../Camera.hpp"
+#include "../drawable/Cube.hpp"
 #include <iostream>
 
 SkyboxScene::SkyboxScene() {
@@ -25,7 +26,7 @@ void SkyboxScene::init() {
     );
     
     skyboxTexture = std::make_unique<SkyboxTexture>(skyboxFaces);
-    skyboxModel = Model::createCube(MeshType::BASIC);
+    skyboxModel = Cube::create(MeshType::BASIC);
     skyboxModel->setScale(50.0f); // Make it large enough to contain the scene
     skyboxModel->setupAllMeshes();
 }

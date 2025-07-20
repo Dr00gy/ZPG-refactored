@@ -210,13 +210,3 @@ std::shared_ptr<Model> Model::createCircle(float radius, int segments, MeshType 
     auto mesh = std::make_shared<Mesh>(Mesh::createCircle(radius, segments, type));
     return std::make_shared<Model>(mesh);
 }
-
-std::shared_ptr<Model> Model::createCube(MeshType type) {
-    auto mesh = std::make_shared<Mesh>(Mesh::createCube(type));
-    return std::make_shared<Model>(mesh);
-}
-
-std::shared_ptr<Model> Model::createPlane(MeshType type) {
-    auto mesh = std::make_shared<Mesh>(Mesh::createPlane(type));
-    return std::make_shared<Model>(mesh);
-}

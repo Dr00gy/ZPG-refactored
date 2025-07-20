@@ -22,6 +22,14 @@ add_executable(kms
     src/shaders/Shader.cpp
     src/shaders/Texture.cpp
     src/shaders/SkyboxTexture.cpp
+    src/objects/drawable/Login.cpp
+    src/objects/drawable/House.cpp
+    src/objects/drawable/Creature.cpp
+    src/objects/drawable/Plain.cpp
+    src/objects/drawable/Tree.cpp
+    src/objects/drawable/Bush.cpp
+    src/objects/drawable/Sphere.cpp
+    src/objects/drawable/Cube.cpp
     src/objects/scenes/TriangleScene.cpp
     src/objects/scenes/RectangleScene.cpp
     src/objects/scenes/TexturedScene.cpp

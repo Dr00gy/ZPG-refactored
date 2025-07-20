@@ -226,69 +226,6 @@ Mesh Mesh::createCircle(float radius, int segments, MeshType type) {
     return mesh;
 }
 
-Mesh Mesh::createCube(MeshType type) {
-    Mesh mesh(type);
-    std::vector<glm::vec3> positions = {
-        // Front face
-        {-1.0f, -1.0f,  1.0f}, { 1.0f, -1.0f,  1.0f}, { 1.0f,  1.0f,  1.0f}, {-1.0f,  1.0f,  1.0f},
-        // Back face
-        {-1.0f, -1.0f, -1.0f}, {-1.0f,  1.0f, -1.0f}, { 1.0f,  1.0f, -1.0f}, { 1.0f, -1.0f, -1.0f},
-        // Top face
-        {-1.0f,  1.0f, -1.0f}, {-1.0f,  1.0f,  1.0f}, { 1.0f,  1.0f,  1.0f}, { 1.0f,  1.0f, -1.0f},
-        // Bottom face
-        {-1.0f, -1.0f, -1.0f}, { 1.0f, -1.0f, -1.0f}, { 1.0f, -1.0f,  1.0f}, {-1.0f, -1.0f,  1.0f},
-        // Right face
-        { 1.0f, -1.0f, -1.0f}, { 1.0f,  1.0f, -1.0f}, { 1.0f,  1.0f,  1.0f}, { 1.0f, -1.0f,  1.0f},
-        // Left face
-        {-1.0f, -1.0f, -1.0f}, {-1.0f, -1.0f,  1.0f}, {-1.0f,  1.0f,  1.0f}, {-1.0f,  1.0f, -1.0f}
-    };
-    
-    std::vector<glm::vec3> normals = {
-        // Front, Back, Top, Bottom, Right, Left
-        { 0.0f,  0.0f,  1.0f}, { 0.0f,  0.0f, -1.0f}, { 0.0f,  1.0f,  0.0f},
-        { 0.0f, -1.0f,  0.0f}, { 1.0f,  0.0f,  0.0f}, {-1.0f,  0.0f,  0.0f}
-    };
-    
-    std::vector<glm::vec2> texCoords = {
-        {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f}
-    };
-    
-    for (int face = 0; face < 6; ++face) {
-        for (int i = 0; i < 4; ++i) {
-            Vertex vertex;
-            vertex.position = positions[face * 4 + i];
-            if (type == MeshType::NORMAL || type == MeshType::UV) {
-                vertex.normal = normals[face];
-            }
-            if (type == MeshType::UV) {
-                vertex.texCoords = texCoords[i];
-            }
-            mesh.addVertex(vertex);
-        }
-        
-        // 2 triangles per face
-        int baseIndex = face * 4;
-        mesh.addTriangle(baseIndex, baseIndex + 1, baseIndex + 2);
-        mesh.addTriangle(baseIndex + 2, baseIndex + 3, baseIndex);
-    }
-    
-    return mesh;
-}
-
-Mesh Mesh::createPlane(MeshType type) {
-    Mesh mesh(type);
-    
-    mesh.addVertex(glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f));
-    mesh.addVertex(glm::vec3( 1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f));
-    mesh.addVertex(glm::vec3( 1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f));
-    mesh.addVertex(glm::vec3(-1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f));
-    
-    mesh.addTriangle(0, 1, 2);
-    mesh.addTriangle(2, 3, 0);
-    
-    return mesh;
-}
-
 void Mesh::setupMesh() {
     if (isSetup) return;
     

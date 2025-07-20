@@ -1,4 +1,5 @@
 #pragma once
+#define GLM_ENABLE_EXPERIMENTAL
 #include "Mesh.hpp"
 #include "transformations/TransformationComposite.hpp"
 #include "transformations/Translation.hpp"
@@ -68,8 +69,6 @@ public:
     static std::shared_ptr<Model> createTriangle(MeshType type = MeshType::BASIC);
     static std::shared_ptr<Model> createSquare(MeshType type = MeshType::BASIC);
     static std::shared_ptr<Model> createCircle(float radius = 1.0f, int segments = 100, MeshType type = MeshType::BASIC);
-    static std::shared_ptr<Model> createCube(MeshType type = MeshType::BASIC);
-    static std::shared_ptr<Model> createPlane(MeshType type = MeshType::UV);
 
 private:
     void loadModel(const std::string& filepath, MeshType type);
